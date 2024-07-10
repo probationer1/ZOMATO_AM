@@ -1,4 +1,4 @@
-      import React from 'react'
+      import React,{Component, useState} from 'react'
       import Navbar from './components/navbar/navbar'
       import {Route, Routes,BrowserRouter} from 'react-router-dom'
    import Home from './page/Home/Home'
@@ -10,14 +10,16 @@ import AppDownload from './components/AppDownload/AppDownload'
     
 
     const App= () =>{
+      const [showlogin,setshowlogin]= useState(false)
         return(
           <>
+          {showlogin?<loginpopup/>:<></>}
           <div className='app'>
-            <Navbar/>
+            <Navbar setshowlogin={setshowlogin}/>
             <Routes>
-              < Route path='/' element={<Home/>}/>
-              < Route path='/Cart' element={<Cart/>}/>
-              < Route path='/Order' element={<PlaceOrder/>}/>
+              < Route path='/' Component={<Home/>}/>
+              < Route path='/Cart' Component={<Cart/>}/>
+              < Route path='/Order' Component={<PlaceOrder/>}/>
             </Routes>
           </div>
           <Footer/>

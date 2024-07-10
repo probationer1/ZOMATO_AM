@@ -1,36 +1,52 @@
-import React, { createContext, useState } from "react";
-import { food_list } from "../assets/assets";
+                    import React, { createContext, useState } from "react";
+                    import { food_list } from "../assets/assets";
+                    import Cart from "../page/Cart/Cart";
+                    export const StoreContext = createContext(null);
 
-export const StoreContext = createContext(null);
+                    const StoreContextProvider = (props) => {
+                    
+                        const [cartItems, setCartItems] = useState({});
 
-const StoreContextProvider = (props) => {
-    const [cartItems, setCartItems] = useState({});
+                        const addToCart = (itemId) => {
+                            if (!cartItems[itemId]) {
+                                setCartItems((prev) => ({ ...prev, [itemId]: 1 }));
+                            } else {
+                                setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
+                            }
 
-    const addToCart = (itemId) => {
-        if (!cartItems[itemId]) {
-            setCartItems((prev) => ({ ...prev, [itemId]: 1 }));
-        } else {
-            setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
-        }
-    };
+                        }
+                   
 
-    const removeFromCart = (itemId) => {
-        setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
-    };
+                        const removeFromCart = (itemId) => {
+                            setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
 
-    // Define contextValue within StoreContextProvider
-    const contextValue = {
-        food_list,
-        cartItems,
-        addToCart,
-        removeFromCart,
-    };
-
-    return (
-        <StoreContext.Provider value={contextValue}>
-            {props.children}
-        </StoreContext.Provider>
-    );
-};
-
-export default StoreContextProvider;
+                        }
+                        const getTotalCartAmount=()=>{
+                            let totalAmount= 0;
+                            for(const item in cartItems){
+                                if(cartItems[item]>0){
+                                    let itemInfo= food_list.find((product)=>product._id===item);
+                                    totalAmount+=itemInfo.price* cartItems[item];
+                                    
+                                        }
+                                       
+                            }
+                            return totalAmount;
+                    }
+                    const contextValue = {
+                        food_list,
+                        cartItems,
+                        setCartItems,
+                        addToCart,
+                        removeFromCart,
+                        getTotalCartAmount
+                    }
+                    return (
+                        <StoreContext.Provider value={contextValue}>
+                            {props.children}
+                        </StoreContext.Provider>
+                    )
+                }
+                
+                    
+                export default StoreContextProvider;
